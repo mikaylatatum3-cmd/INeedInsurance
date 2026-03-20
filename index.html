@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a Callback | Insurance with Mikayla</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #0033A0;
+  --blue-dark: #002480;
+  --blue-light: #1a4db8;
+  --offwhite: #f4f7fc;
+  --lightgray: #e4eaf5;
+  --text: #1a1a1a;
+  --muted: #5a6478;
+  --border: #cdd6ed;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Open Sans', sans-serif; background: var(--offwhite); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 0 0 3rem 0; }
+.header-bar { width: 100%; background: var(--blue); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: white; font-style: italic; }
+.agency-info { text-align: right; font-size: 0.68rem; color: rgba(255,255,255,0.8); font-weight: 600; line-height: 1.5; }
+.hero { width: 100%; background: linear-gradient(160deg, var(--blue) 0%, var(--blue-light) 100%); padding: 2.5rem 2rem 4rem; display: flex; align-items: center; gap: 1.5rem; position: relative; overflow: hidden; }
+.hero::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 50px; background: var(--offwhite); border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.hero-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; object-position: center top; border: 3px solid rgba(255,255,255,0.5); flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.hero-text h1 { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 0.25rem; }
+.hero-text .subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.8); margin-bottom: 0.6rem; }
+.hero-text .tagline { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 100px; }
+.bundle-banner { width: calc(100% - 2rem); max-width: 580px; background: white; border: 2px solid var(--blue); border-radius: 12px; padding: 1rem 1.25rem; margin: -1rem auto 0; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 4px 20px rgba(0,51,160,0.1); position: relative; z-index: 2; }
+.bundle-icon { font-size: 1.6rem; }
+.bundle-text strong { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--blue); margin-bottom: 0.1rem; }
+.bundle-text span { font-size: 0.75rem; color: var(--muted); }
+.card { width: calc(100% - 2rem); max-width: 580px; background: white; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,51,160,0.1); padding: 2rem; margin-top: 1.25rem; }
+.section-title { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 800; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--lightgray); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.form-group { margin-bottom: 1rem; }
+.field-label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--blue); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.35rem; }
+input[type="text"], input[type="tel"], input[type="email"] { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Open Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--offwhite); transition: border-color 0.2s, box-shadow 0.2s; outline: none; -webkit-appearance: none; appearance: none; }
+input[type="text"]:focus, input[type="tel"]:focus, input[type="email"]:focus { border-color: var(--blue); background: white; box-shadow: 0 0 0 3px rgba(0,51,160,0.1); }
+input::placeholder { color: #aab2c4; }
+.product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem; }
+.product-tile { display: flex; align-items: center; justify-content: center; padding: 0.8rem 0.5rem; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; background: var(--offwhite); text-align: center; font-size: 0.83rem; font-weight: 600; color: var(--muted); user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.product-tile.selected { border-color: var(--blue); background: var(--blue); color: white; box-shadow: 0 2px 8px rgba(0,51,160,0.25); }
+.bundle-hint { background: linear-gradient(135deg, rgba(0,51,160,0.07), rgba(0,51,160,0.02)); border: 1.5px solid rgba(0,51,160,0.25); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 0.77rem; color: var(--blue); font-weight: 600; display: none; margin-bottom: 1rem; text-align: center; }
+.divider { height: 1px; background: var(--lightgray); margin: 1.5rem 0; }
+.consent-section { background: var(--offwhite); border: 1.5px solid var(--border); border-left: 4px solid var(--blue); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem; }
+.consent-row { display: flex; align-items: flex-start; gap: 0.75rem; }
+.consent-checkbox { width: 22px; height: 22px; min-width: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--blue); flex-shrink: 0; }
+.consent-body { font-size: 0.77rem; color: var(--muted); line-height: 1.65; }
+.consent-body b { color: var(--blue); font-weight: 700; }
+.not-required { display: block; margin-top: 0.5rem; font-size: 0.7rem; color: #9aa0af; font-style: italic; }
+.submit-btn { width: 100%; padding: 1.05rem; background: var(--blue); color: white; border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; letter-spacing: 0.03em; -webkit-appearance: none; appearance: none; }
+.submit-btn:hover { background: var(--blue-dark); }
+.success-state { display: none; text-align: center; padding: 1rem 0; }
+.success-icon { width: 80px; height: 80px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; font-size: 2.2rem; }
+.success-state h2 { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--blue); margin-bottom: 0.5rem; }
+.success-state p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+.hours-notice { display: none; background: rgba(0,51,160,0.05); border: 1.5px solid var(--blue); border-radius: 8px; padding: 0.9rem; margin-top: 1rem; font-size: 0.82rem; color: var(--blue); line-height: 1.6; }
+.footer { width: 100%; max-width: 580px; text-align: center; margin-top: 1.5rem; padding: 0 1rem; font-size: 0.73rem; color: var(--muted); line-height: 1.8; }
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .form-row .form-group { margin-bottom: 1rem; }
+  .hero { padding: 2rem 1.25rem 4rem; }
+  .hero-photo { width: 80px; height: 80px; }
+  .card { padding: 1.5rem; }
+}
+
+.contact-options { margin-top: 1.5rem; }
+.contact-label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.75rem; font-weight: 600; }
+.contact-btn { display: block; padding: 0.85rem 1rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 700; text-decoration: none; margin-bottom: 0.6rem; transition: all 0.2s; text-align: center; }
+.call-direct { background: var(--blue); color: white; }
+.call-direct:hover { background: var(--blue-dark); }
+.email-direct { background: white; color: var(--blue); border: 1.5px solid var(--blue); }
+.email-direct:hover { background: var(--offwhite); }
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+  <div class="logo">Allstate.</div>
+  <div class="agency-info">Donovan Gomez Agency<br>The Woodlands, TX</div>
+</div>
+
+<div class="hero">
+  <img class="hero-photo" src="data:image/jpeg;base64,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" alt="Mikayla Tatum">
+  <div class="hero-text">
+    <h1>Mikayla Tatum</h1>
+    <div class="subtitle">Licensed Insurance Agent &middot; Allstate</div>
+    <div class="tagline">&#128737; Protection Looks Good On You</div>
+  </div>
+</div>
+
+<div class="bundle-banner">
+  <div class="bundle-icon">&#128176;</div>
+  <div class="bundle-text">
+    <strong>Customers Save More by Bundling!</strong>
+    <span>Combine auto, home, renters &amp; more for maximum savings.</span>
+  </div>
+</div>
+
+<div class="card">
+  <div id="mainForm">
+    <div class="section-title">Your Information</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="field-label">First Name</label>
+        <input type="text" id="firstName" required placeholder="First name">
+      </div>
+      <div class="form-group">
+        <label class="field-label">Last Name</label>
+        <input type="text" id="lastName" required placeholder="Last name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Phone Number</label>
+      <input type="tel" id="phone" required placeholder="(713) 000-0000">
+    </div>
+    <div class="form-group">
+      <label class="field-label">Email Address</label>
+      <input type="email" id="email" required placeholder="your@email.com">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">What Can I Help You With? (Select all that apply)</div>
+    <div class="product-grid">
+      <div class="product-tile" id="p1" data-value="Auto Insurance">&#128663; Auto Insurance</div>
+      <div class="product-tile" id="p2" data-value="Home Insurance">&#127968; Home Insurance</div>
+      <div class="product-tile" id="p3" data-value="Renters Insurance">&#128273; Renters Insurance</div>
+      <div class="product-tile" id="p4" data-value="Life Insurance">&#10084; Life Insurance</div>
+      <div class="product-tile" id="p5" data-value="Commercial Insurance">&#127970; Commercial</div>
+      <div class="product-tile" id="p6" data-value="Special Lines">&#11088; Special Lines</div>
+      <div class="product-tile" id="p7" data-value="Other / Not Sure">&#128172; Other / Not Sure</div>
+    </div>
+    <div class="bundle-hint" id="bundleHint">&#127881; Great choice! Bundling multiple products can save you up to 25%!</div>
+
+    <div class="divider"></div>
+
+    <div class="consent-section">
+      <div class="consent-row">
+        <input type="checkbox" class="consent-checkbox" id="consentBox">
+        <div class="consent-body">
+          By checking this box and clicking <b>"Submit Request"</b> below, I provide my prior express written consent and electronic signature authorizing <b>Mikayla Tatum</b> and licensed agents of the <b>Donovan Gomez Allstate Agency</b> to contact me at the phone number and email address I have provided for marketing purposes, including via telephone calls, SMS/MMS text messages, emails, and automated or prerecorded technology. <b>Consent is not a condition of purchasing any insurance product or service.</b> I may revoke this consent at any time by replying STOP to any text message or by contacting the agency directly.
+          <span class="not-required">* You are not required to consent in order to receive a quote or purchase a policy.</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn">Submit Request &#8594;</button>
+  </div>
+
+  <div class="success-state" id="successState">
+    <div class="success-icon">&#9989;</div>
+    <h2>You're All Set!</h2>
+    <p id="successMsg"></p>
+    <div class="hours-notice" id="hoursNotice">
+      &#9200; Office hours: <b>Mon-Thu 9am-6pm</b> &amp; <b>Fri 9am-5pm CT</b>.<br>
+      Mikayla will follow up with you next business day!
+    </div>
+    <div class="contact-options">
+      <p class="contact-label">Prefer to reach out directly?</p>
+      <a href="tel:+12813951800" class="contact-btn call-direct">&#128222; Call (281) 395-1800 &mdash; Ask for Mikayla</a>
+      <a href="mailto:mikaylatatum@allstate.com" class="contact-btn email-direct">&#9993; mikaylatatum@allstate.com</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Mikayla Tatum &middot; Licensed Insurance Agent &middot; Donovan Gomez Allstate Agency<br>
+  The Woodlands, TX<br>
+  Your information will not be sold or shared with third parties.
+</div>
+
+<script>
+document.getElementById('phone').addEventListener('input', function() {
+  var v = this.value.replace(/\D/g,'').substring(0,10);
+  if (v.length >= 7) v = '('+v.substring(0,3)+') '+v.substring(3,6)+'-'+v.substring(6);
+  else if (v.length >= 4) v = '('+v.substring(0,3)+') '+v.substring(3);
+  else if (v.length >= 1) v = '('+v;
+  this.value = v;
+});
+
+var tiles = document.querySelectorAll('.product-tile');
+for (var i = 0; i < tiles.length; i++) {
+  tiles[i].addEventListener('click', function() {
+    this.classList.toggle('selected');
+    var sel = document.querySelectorAll('.product-tile.selected').length;
+    document.getElementById('bundleHint').style.display = sel >= 2 ? 'block' : 'none';
+  });
+}
+
+function isBusinessHours() {
+  var ct = new Date(new Date().toLocaleString("en-US", {timeZone:"America/Chicago"}));
+  var day = ct.getDay();
+  var t = ct.getHours() + ct.getMinutes()/60;
+  if (day >= 1 && day <= 4) return t >= 9 && t < 18;
+  if (day === 5) return t >= 9 && t < 17;
+  return false;
+}
+
+document.getElementById('submitBtn').addEventListener('click', function() {
+  var firstName = document.getElementById('firstName').value.trim();
+  var lastName = document.getElementById('lastName').value.trim();
+  var phone = document.getElementById('phone').value.trim();
+  var email = document.getElementById('email').value.trim();
+  var consent = document.getElementById('consentBox').checked;
+  var selected = [];
+  var tiles = document.querySelectorAll('.product-tile.selected');
+  for (var i = 0; i < tiles.length; i++) {
+    selected.push(tiles[i].getAttribute('data-value'));
+  }
+
+  if (!firstName || !lastName || !phone || !email) {
+    alert('Please fill out all fields before submitting.');
+    return;
+  }
+  if (selected.length === 0) {
+    alert('Please select at least one product.');
+    return;
+  }
+  if (!consent) {
+    alert('Please check the consent box to continue.');
+    return;
+  }
+
+  var btn = document.getElementById('submitBtn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  var data = new FormData();
+  data.append('First Name', firstName);
+  data.append('Last Name', lastName);
+  data.append('Phone', phone);
+  data.append('Email', email);
+  data.append('Interested In', selected.join(', '));
+  data.append('TCPA Consent', 'Yes');
+  data.append('Submitted', new Date().toLocaleString('en-US', {timeZone:'America/Chicago'}) + ' CT');
+
+  fetch('https://formspree.io/f/xyknorqq', {
+    method: 'POST',
+    body: data,
+    headers: {'Accept': 'application/json'}
+  }).then(function(r) {
+    return r.json().then(function(d) { return {ok: r.ok, data: d}; });
+  }).then(function(res) {
+    if (res.ok) {
+      document.getElementById('mainForm').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+      var msg = isBusinessHours()
+        ? 'Thanks ' + firstName + '! Your request has been received and Mikayla will be reaching out to you shortly!'
+        : 'Thanks ' + firstName + '! Your request has been received. Mikayla will follow up with you next business day!';
+      document.getElementById('successMsg').textContent = msg;
+      if (!isBusinessHours()) document.getElementById('hoursNotice').style.display = 'block';
+    } else {
+      alert('Error: ' + JSON.stringify(res.data));
+      btn.textContent = 'Submit Request';
+      btn.disabled = false;
+    }
+  }).catch(function(err) {
+    alert('Connection error. Please try again.');
+    btn.textContent = 'Submit Request';
+    btn.disabled = false;
+  });
+});
+</script>
+</body>
+</html>
