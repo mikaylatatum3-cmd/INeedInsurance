@@ -15,6 +15,7 @@
   --text: #1a1a1a;
   --muted: #5a6478;
   --border: #cdd6ed;
+  --red: #CC0000;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: 'Open Sans', sans-serif; background: var(--offwhite); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 0 0 3rem 0; }
@@ -27,36 +28,56 @@ body { font-family: 'Open Sans', sans-serif; background: var(--offwhite); min-he
 .hero-text h1 { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 0.25rem; }
 .hero-text .subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.8); margin-bottom: 0.6rem; }
 .hero-text .tagline { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 100px; }
-.bundle-banner { width: calc(100% - 2rem); max-width: 580px; background: white; border: 2px solid var(--blue); border-radius: 12px; padding: 1rem 1.25rem; margin: -1rem auto 0; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 4px 20px rgba(0,51,160,0.1); position: relative; z-index: 2; }
-.bundle-icon { font-size: 1.6rem; }
-.bundle-text strong { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--blue); margin-bottom: 0.1rem; }
-.bundle-text span { font-size: 0.75rem; color: var(--muted); }
 .card { width: calc(100% - 2rem); max-width: 580px; background: white; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,51,160,0.1); padding: 2rem; margin-top: 1.25rem; }
 .section-title { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 800; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--lightgray); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
 .form-group { margin-bottom: 1rem; }
 .field-label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--blue); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.35rem; }
-input[type="text"], input[type="tel"], input[type="email"] { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Open Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--offwhite); transition: border-color 0.2s, box-shadow 0.2s; outline: none; -webkit-appearance: none; appearance: none; }
-input[type="text"]:focus, input[type="tel"]:focus, input[type="email"]:focus { border-color: var(--blue); background: white; box-shadow: 0 0 0 3px rgba(0,51,160,0.1); }
-input::placeholder { color: #aab2c4; }
+.required-tag { color: var(--red); font-size: 0.68rem; font-weight: 700; margin-left: 0.3rem; }
+.optional-tag { color: var(--muted); font-size: 0.68rem; font-weight: 600; margin-left: 0.3rem; text-transform: none; letter-spacing: 0; }
+input[type="text"], input[type="tel"], input[type="email"], input[type="number"], select, textarea { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Open Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--offwhite); transition: border-color 0.2s, box-shadow 0.2s; outline: none; -webkit-appearance: none; appearance: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--blue); background: white; box-shadow: 0 0 0 3px rgba(0,51,160,0.1); }
+input::placeholder, textarea::placeholder { color: #aab2c4; }
+textarea { resize: vertical; min-height: 80px; }
+.select-wrap { position: relative; }
+.select-wrap::after { content: '\25BE'; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--blue); pointer-events: none; }
 .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem; }
 .product-tile { display: flex; align-items: center; justify-content: center; padding: 0.8rem 0.5rem; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; background: var(--offwhite); text-align: center; font-size: 0.83rem; font-weight: 600; color: var(--muted); user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
 .product-tile.selected { border-color: var(--blue); background: var(--blue); color: white; box-shadow: 0 2px 8px rgba(0,51,160,0.25); }
-.bundle-hint { background: linear-gradient(135deg, rgba(0,51,160,0.07), rgba(0,51,160,0.02)); border: 1.5px solid rgba(0,51,160,0.25); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 0.77rem; color: var(--blue); font-weight: 600; display: none; margin-bottom: 1rem; text-align: center; }
+.bundle-banner { background: linear-gradient(135deg, rgba(0,51,160,0.07), rgba(0,51,160,0.02)); border: 1.5px solid rgba(0,51,160,0.25); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem; color: var(--blue); font-weight: 700; }
+.bundle-hint { background: linear-gradient(135deg, rgba(0,51,160,0.07), rgba(0,51,160,0.02)); border: 1.5px solid rgba(0,51,160,0.25); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 0.77rem; color: var(--blue); font-weight: 600; display: none; margin-top: 0.6rem; text-align: center; }
 .divider { height: 1px; background: var(--lightgray); margin: 1.5rem 0; }
 .consent-section { background: var(--offwhite); border: 1.5px solid var(--border); border-left: 4px solid var(--blue); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem; }
 .consent-row { display: flex; align-items: flex-start; gap: 0.75rem; }
 .consent-checkbox { width: 22px; height: 22px; min-width: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--blue); flex-shrink: 0; }
 .consent-body { font-size: 0.77rem; color: var(--muted); line-height: 1.65; }
 .consent-body b { color: var(--blue); font-weight: 700; }
-.not-required { display: block; margin-top: 0.5rem; font-size: 0.7rem; color: #9aa0af; font-style: italic; }
-.submit-btn { width: 100%; padding: 1.05rem; background: var(--blue); color: white; border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; letter-spacing: 0.03em; -webkit-appearance: none; appearance: none; }
-.submit-btn:hover { background: var(--blue-dark); }
+.not-required-note { display: block; margin-top: 0.5rem; font-size: 0.7rem; color: #9aa0af; font-style: italic; }
+.btn { width: 100%; padding: 1.05rem; border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; letter-spacing: 0.03em; -webkit-appearance: none; appearance: none; }
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: var(--blue-dark); }
+.btn-secondary { background: white; color: var(--blue); border: 2px solid var(--blue); margin-bottom: 0.75rem; }
+.btn-secondary:hover { background: var(--offwhite); }
+.page-indicator { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+.page-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: background 0.2s; }
+.page-dot.active { background: var(--blue); }
+.page-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+.optional-note { background: rgba(0,51,160,0.04); border: 1px solid rgba(0,51,160,0.15); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--blue); font-weight: 600; margin-bottom: 1.5rem; text-align: center; }
+.radio-group { display: flex; gap: 1rem; }
+.radio-option { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; color: var(--text); cursor: pointer; }
+.radio-option input[type="radio"] { accent-color: var(--blue); width: 16px; height: 16px; }
 .success-state { display: none; text-align: center; padding: 1rem 0; }
 .success-icon { width: 80px; height: 80px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; font-size: 2.2rem; }
 .success-state h2 { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--blue); margin-bottom: 0.5rem; }
-.success-state p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
-.hours-notice { display: none; background: rgba(0,51,160,0.05); border: 1.5px solid var(--blue); border-radius: 8px; padding: 0.9rem; margin-top: 1rem; font-size: 0.82rem; color: var(--blue); line-height: 1.6; }
+.success-state p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+.hours-notice { background: rgba(0,51,160,0.05); border: 1.5px solid var(--blue); border-radius: 8px; padding: 0.9rem; margin-bottom: 1rem; font-size: 0.82rem; color: var(--blue); line-height: 1.6; display: none; }
+.contact-options { margin-top: 0.5rem; }
+.contact-label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.75rem; font-weight: 600; }
+.contact-btn { display: block; padding: 0.85rem 1rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 700; text-decoration: none; margin-bottom: 0.6rem; transition: all 0.2s; text-align: center; }
+.call-direct { background: var(--blue); color: white; }
+.call-direct:hover { background: var(--blue-dark); }
+.email-direct { background: white; color: var(--blue); border: 1.5px solid var(--blue); }
+.email-direct:hover { background: var(--offwhite); }
 .footer { width: 100%; max-width: 580px; text-align: center; margin-top: 1.5rem; padding: 0 1rem; font-size: 0.73rem; color: var(--muted); line-height: 1.8; }
 @media (max-width: 480px) {
   .form-row { grid-template-columns: 1fr; gap: 0; }
@@ -65,14 +86,6 @@ input::placeholder { color: #aab2c4; }
   .hero-photo { width: 80px; height: 80px; }
   .card { padding: 1.5rem; }
 }
-
-.contact-options { margin-top: 1.5rem; }
-.contact-label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.75rem; font-weight: 600; }
-.contact-btn { display: block; padding: 0.85rem 1rem; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 700; text-decoration: none; margin-bottom: 0.6rem; transition: all 0.2s; text-align: center; }
-.call-direct { background: var(--blue); color: white; }
-.call-direct:hover { background: var(--blue-dark); }
-.email-direct { background: white; color: var(--blue); border: 1.5px solid var(--blue); }
-.email-direct:hover { background: var(--offwhite); }
 </style>
 </head>
 <body>
@@ -91,47 +104,60 @@ input::placeholder { color: #aab2c4; }
   </div>
 </div>
 
-<div class="bundle-banner">
-  <div class="bundle-icon">&#128176;</div>
-  <div class="bundle-text">
-    <strong>Customers Save More by Bundling!</strong>
-    <span>Combine auto, home, renters &amp; more for maximum savings.</span>
-  </div>
-</div>
-
 <div class="card">
-  <div id="mainForm">
+
+  <!-- PAGE 1 -->
+  <div id="page1">
+    <div class="page-indicator">
+      <div class="page-dot active" id="dot1"></div>
+      <div class="page-dot" id="dot2"></div>
+      <span class="page-label">Step 1 of 2</span>
+    </div>
+
     <div class="section-title">Your Information</div>
     <div class="form-row">
       <div class="form-group">
-        <label class="field-label">First Name</label>
-        <input type="text" id="firstName" required placeholder="First name">
+        <label class="field-label">First Name <span class="required-tag">*REQUIRED</span></label>
+        <input type="text" id="firstName" placeholder="First name">
       </div>
       <div class="form-group">
-        <label class="field-label">Last Name</label>
-        <input type="text" id="lastName" required placeholder="Last name">
+        <label class="field-label">Last Name <span class="required-tag">*REQUIRED</span></label>
+        <input type="text" id="lastName" placeholder="Last name">
       </div>
     </div>
     <div class="form-group">
-      <label class="field-label">Phone Number</label>
-      <input type="tel" id="phone" required placeholder="(713) 000-0000">
+      <label class="field-label">Phone Number <span class="required-tag">*REQUIRED</span></label>
+      <input type="tel" id="phone" placeholder="(713) 000-0000">
     </div>
     <div class="form-group">
-      <label class="field-label">Email Address</label>
-      <input type="email" id="email" required placeholder="your@email.com">
+      <label class="field-label">Best Time to Call <span class="required-tag">*REQUIRED</span></label>
+      <div class="select-wrap">
+        <select id="bestTime">
+          <option value="" disabled selected>Select a time</option>
+          <option value="Morning (9am - 12pm)">Morning (9am - 12pm)</option>
+          <option value="Afternoon (12pm - 3pm)">Afternoon (12pm - 3pm)</option>
+          <option value="Late Afternoon (3pm - 6pm)">Late Afternoon (3pm - 6pm)</option>
+          <option value="Anytime">Anytime</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Email Address <span class="required-tag">*REQUIRED</span></label>
+      <input type="email" id="email" placeholder="your@email.com">
     </div>
 
     <div class="divider"></div>
 
-    <div class="section-title">What Can I Help You With? (Select all that apply)</div>
+    <div class="section-title">What Can I Help You With? <span class="required-tag">*REQUIRED</span></div>
+    <div class="bundle-banner">&#128176; Customers save more by bundling! Select all that apply.</div>
     <div class="product-grid">
-      <div class="product-tile" id="p1" data-value="Auto Insurance">&#128663; Auto Insurance</div>
-      <div class="product-tile" id="p2" data-value="Home Insurance">&#127968; Home Insurance</div>
-      <div class="product-tile" id="p3" data-value="Renters Insurance">&#128273; Renters Insurance</div>
-      <div class="product-tile" id="p4" data-value="Life Insurance">&#10084; Life Insurance</div>
-      <div class="product-tile" id="p5" data-value="Commercial Insurance">&#127970; Commercial</div>
-      <div class="product-tile" id="p6" data-value="Special Lines">&#11088; Special Lines</div>
-      <div class="product-tile" id="p7" data-value="Other / Not Sure">&#128172; Other / Not Sure</div>
+      <div class="product-tile" data-value="Auto Insurance">&#128663; Auto Insurance</div>
+      <div class="product-tile" data-value="Home Insurance">&#127968; Home Insurance</div>
+      <div class="product-tile" data-value="Renters Insurance">&#128273; Renters Insurance</div>
+      <div class="product-tile" data-value="Life Insurance">&#10084; Life Insurance</div>
+      <div class="product-tile" data-value="Commercial Insurance">&#127970; Commercial</div>
+      <div class="product-tile" data-value="Special Lines">&#11088; Special Lines</div>
+      <div class="product-tile" data-value="Other / Not Sure">&#128172; Other / Not Sure</div>
     </div>
     <div class="bundle-hint" id="bundleHint">&#127881; Great choice! Bundling multiple products can save you up to 25%!</div>
 
@@ -141,15 +167,70 @@ input::placeholder { color: #aab2c4; }
       <div class="consent-row">
         <input type="checkbox" class="consent-checkbox" id="consentBox">
         <div class="consent-body">
-          By checking this box and clicking <b>"Submit Request"</b> below, I provide my prior express written consent and electronic signature authorizing <b>Mikayla Tatum</b> and licensed agents of the <b>Donovan Gomez Allstate Agency</b> to contact me at the phone number and email address I have provided for marketing purposes, including via telephone calls, SMS/MMS text messages, emails, and automated or prerecorded technology. <b>Consent is not a condition of purchasing any insurance product or service.</b> I may revoke this consent at any time by replying STOP to any text message or by contacting the agency directly.
-          <span class="not-required">* You are not required to consent in order to receive a quote or purchase a policy.</span>
+          By checking this box and clicking <b>"Continue"</b> below, I provide my prior express written consent and electronic signature authorizing <b>Mikayla Tatum</b> and licensed agents of the <b>Donovan Gomez Allstate Agency</b> to contact me at the phone number and email address I have provided for marketing purposes, including via telephone calls, SMS/MMS text messages, emails, and automated or prerecorded technology. <b>Consent is not a condition of purchasing any insurance product or service.</b> I may revoke this consent at any time by replying STOP to any text message or by contacting the agency directly.
+          <span class="not-required-note">* You are not required to consent in order to receive a quote or purchase a policy.</span>
         </div>
       </div>
     </div>
 
-    <button class="submit-btn" id="submitBtn">Submit Request &#8594;</button>
+    <button class="btn btn-primary" id="continueBtn">Continue &#8594;</button>
   </div>
 
+  <!-- PAGE 2 -->
+  <div id="page2" style="display:none;">
+    <div class="page-indicator">
+      <div class="page-dot" id="dot1b"></div>
+      <div class="page-dot active" id="dot2b"></div>
+      <span class="page-label">Step 2 of 2</span>
+    </div>
+
+    <div class="optional-note">&#128161; This page is optional but helps me process your quote faster!</div>
+
+    <div class="section-title">A Little More Info</div>
+
+    <div class="form-group">
+      <label class="field-label">Current Insurance Provider <span class="optional-tag">(Optional)</span></label>
+      <input type="text" id="currentProvider" placeholder="e.g. State Farm, GEICO, None">
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Zip Code <span class="optional-tag">(Optional)</span></label>
+      <input type="text" id="zipCode" placeholder="e.g. 77380" maxlength="5">
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Is the number provided a cell phone? <span class="optional-tag">(Optional)</span></label>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="isCell" value="Yes"> Yes</label>
+        <label class="radio-option"><input type="radio" name="isCell" value="No"> No</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">How did you hear about us? <span class="optional-tag">(Optional)</span></label>
+      <div class="select-wrap">
+        <select id="hearAbout">
+          <option value="" selected>Select an option</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Referral from a friend or family">Referral from a friend or family</option>
+          <option value="Google">Google</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Allstate website">Allstate website</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Additional Notes <span class="optional-tag">(Optional)</span></label>
+      <textarea id="notes" placeholder="Anything else you'd like me to know before I reach out?"></textarea>
+    </div>
+
+    <button class="btn btn-secondary" id="backBtn">&#8592; Back</button>
+    <button class="btn btn-primary" id="submitBtn">Submit Request &#8594;</button>
+  </div>
+
+  <!-- SUCCESS -->
   <div class="success-state" id="successState">
     <div class="success-icon">&#9989;</div>
     <h2>You're All Set!</h2>
@@ -160,10 +241,11 @@ input::placeholder { color: #aab2c4; }
     </div>
     <div class="contact-options">
       <p class="contact-label">Prefer to reach out directly?</p>
-      <a href="tel:+12813951800" class="contact-btn call-direct">&#128222; Call (281) 395-1800 &mdash; Ask for Mikayla</a>
+      <a href="tel:+12813951800" class="contact-btn call-direct" id="callBtn" style="display:none;">&#128222; Call (281) 395-1800 &mdash; Ask for Mikayla</a>
       <a href="mailto:mikaylatatum@allstate.com" class="contact-btn email-direct">&#9993; mikaylatatum@allstate.com</a>
     </div>
   </div>
+
 </div>
 
 <div class="footer">
@@ -190,6 +272,11 @@ for (var i = 0; i < tiles.length; i++) {
   });
 }
 
+document.getElementById('backBtn').addEventListener('click', function() {
+  document.getElementById('page2').style.display = 'none';
+  document.getElementById('page1').style.display = 'block';
+});
+
 function isBusinessHours() {
   var ct = new Date(new Date().toLocaleString("en-US", {timeZone:"America/Chicago"}));
   var day = ct.getDay();
@@ -199,30 +286,45 @@ function isBusinessHours() {
   return false;
 }
 
-document.getElementById('submitBtn').addEventListener('click', function() {
+document.getElementById('continueBtn').addEventListener('click', function() {
   var firstName = document.getElementById('firstName').value.trim();
   var lastName = document.getElementById('lastName').value.trim();
   var phone = document.getElementById('phone').value.trim();
   var email = document.getElementById('email').value.trim();
+  var bestTime = document.getElementById('bestTime').value;
   var consent = document.getElementById('consentBox').checked;
-  var selected = [];
-  var tiles = document.querySelectorAll('.product-tile.selected');
-  for (var i = 0; i < tiles.length; i++) {
-    selected.push(tiles[i].getAttribute('data-value'));
-  }
+  var selected = document.querySelectorAll('.product-tile.selected').length;
 
-  if (!firstName || !lastName || !phone || !email) {
-    alert('Please fill out all fields before submitting.');
+  if (!firstName || !lastName || !phone || !email || !bestTime) {
+    alert('Please fill out all required fields before continuing.');
     return;
   }
-  if (selected.length === 0) {
-    alert('Please select at least one product.');
+  if (selected === 0) {
+    alert('Please select at least one product you are interested in.');
     return;
   }
   if (!consent) {
     alert('Please check the consent box to continue.');
     return;
   }
+
+  document.getElementById('page1').style.display = 'none';
+  document.getElementById('page2').style.display = 'block';
+  window.scrollTo(0, 0);
+});
+
+document.getElementById('submitBtn').addEventListener('click', function() {
+  var firstName = document.getElementById('firstName').value.trim();
+  var lastName = document.getElementById('lastName').value.trim();
+  var phone = document.getElementById('phone').value.trim();
+  var email = document.getElementById('email').value.trim();
+  var bestTime = document.getElementById('bestTime').value;
+  var selected = Array.from(document.querySelectorAll('.product-tile.selected')).map(function(el){ return el.getAttribute('data-value'); });
+  var currentProvider = document.getElementById('currentProvider').value.trim();
+  var zipCode = document.getElementById('zipCode').value.trim();
+  var isCell = document.querySelector('input[name="isCell"]:checked');
+  var hearAbout = document.getElementById('hearAbout').value;
+  var notes = document.getElementById('notes').value.trim();
 
   var btn = document.getElementById('submitBtn');
   btn.textContent = 'Sending...';
@@ -232,9 +334,15 @@ document.getElementById('submitBtn').addEventListener('click', function() {
   data.append('First Name', firstName);
   data.append('Last Name', lastName);
   data.append('Phone', phone);
+  data.append('Best Time to Call', bestTime);
   data.append('Email', email);
   data.append('Interested In', selected.join(', '));
-  data.append('TCPA Consent', 'Yes');
+  data.append('Current Provider', currentProvider || 'Not provided');
+  data.append('Zip Code', zipCode || 'Not provided');
+  data.append('Cell Phone', isCell ? isCell.value : 'Not answered');
+  data.append('How They Heard', hearAbout || 'Not provided');
+  data.append('Notes', notes || 'None');
+  data.append('TCPA Consent', 'Yes - Prior express written consent provided');
   data.append('Submitted', new Date().toLocaleString('en-US', {timeZone:'America/Chicago'}) + ' CT');
 
   fetch('https://formspree.io/f/xyknorqq', {
@@ -245,19 +353,22 @@ document.getElementById('submitBtn').addEventListener('click', function() {
     return r.json().then(function(d) { return {ok: r.ok, data: d}; });
   }).then(function(res) {
     if (res.ok) {
-      document.getElementById('mainForm').style.display = 'none';
+      document.getElementById('page2').style.display = 'none';
       document.getElementById('successState').style.display = 'block';
-      var msg = isBusinessHours()
+      window.scrollTo(0, 0);
+      var open = isBusinessHours();
+      var msg = open
         ? 'Thanks ' + firstName + '! Your request has been received and Mikayla will be reaching out to you shortly!'
         : 'Thanks ' + firstName + '! Your request has been received. Mikayla will follow up with you next business day!';
       document.getElementById('successMsg').textContent = msg;
-      if (!isBusinessHours()) document.getElementById('hoursNotice').style.display = 'block';
+      if (!open) document.getElementById('hoursNotice').style.display = 'block';
+      if (open) document.getElementById('callBtn').style.display = 'block';
     } else {
       alert('Error: ' + JSON.stringify(res.data));
       btn.textContent = 'Submit Request';
       btn.disabled = false;
     }
-  }).catch(function(err) {
+  }).catch(function() {
     alert('Connection error. Please try again.');
     btn.textContent = 'Submit Request';
     btn.disabled = false;
