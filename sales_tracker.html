@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sales Tracker — Donovan Gomez Allstate Agency</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4f9;color:#1a2a3a;min-height:100vh}
+:root{--navy:#003087;--red:#E31837;--blue:#0077C0;--light:#E8EFF8;--lighter:#F4F7FC;--border:#c8d8e8;--muted:#5a7090}
+
+/* Layout */
+.app{max-width:960px;margin:0 auto;padding:20px}
+.hdr{background:var(--navy);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,48,135,0.25)}
+.hdr-brand{display:flex;align-items:center;gap:12px}
+.good-hands{width:42px;height:42px;flex-shrink:0}
+.brand-text .agency{color:#fff;font-size:16px;font-weight:700;letter-spacing:-0.01em}
+.brand-text .allstate{color:rgba(255,255,255,0.6);font-size:11px;text-transform:uppercase;letter-spacing:0.1em;margin-top:1px}
+.hdr-tabs{display:flex;gap:6px}
+.tab{padding:7px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.3);cursor:pointer;font-size:13px;font-weight:500;background:transparent;color:rgba(255,255,255,0.8);transition:all .15s}
+.tab:hover{background:rgba(255,255,255,0.12)}
+.tab.on{background:#fff;color:var(--navy);border-color:#fff}
+
+/* Cards & Layout */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+
+/* Metrics */
+.metric{background:var(--navy);border-radius:10px;padding:14px 16px;color:#fff}
+.metric.green{background:#0a5c2e}
+.metric.alt{background:#0077C0}
+.ml{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:rgba(255,255,255,0.65);margin-bottom:5px}
+.mv{font-size:24px;font-weight:700;color:#fff;line-height:1}
+.msub{font-size:11px;color:rgba(255,255,255,0.6);margin-top:4px}
+
+/* Forms */
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px;font-weight:500}
+input,select,textarea{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;background:#fff;color:#1a2a3a;font-size:13px;font-family:inherit;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,119,192,0.12)}
+
+/* Buttons — ALWAYS VISIBLE */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;border:none;transition:all .15s;white-space:nowrap}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:#002070}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{background:#005fa3}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#b8101f}
+.btn-outline{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn-outline:hover{background:var(--light)}
+.btn-ghost{background:var(--light);color:var(--navy);border:2px dashed var(--blue)}
+.btn-ghost:hover{background:#d4e4f4}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-xs{padding:4px 9px;font-size:11px}
+
+/* Pills */
+.pill{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600}
+.p-teal{background:#dcf5ec;color:#0a6040}
+.p-gray{background:#e8edf2;color:#3a4a5a}
+.p-blue{background:#dceeff;color:#003d8a}
+.p-brok{background:#fff3e0;color:#7a4500}
+.p-red{background:#fde8eb;color:#8a001a}
+.p-green{background:#dcf5ec;color:#0a6040}
+
+/* Client cards */
+.client-card{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,48,135,0.07)}
+.client-hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;transition:background .15s}
+.client-hdr:hover{background:#f8fafc}
+.c-av{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.client-body{border-top:1px solid var(--border);padding:14px 18px;background:#fafbfd}
+.pol-item{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.pol-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.pol-dates{display:flex;gap:12px;font-size:11px;color:var(--muted);margin-top:7px;flex-wrap:wrap}
+.chev{transition:transform .2s;font-size:11px;color:#8aa0b8;margin-left:4px}
+.chev.open{transform:rotate(90deg)}
+
+/* Tier */
+.tier-row{display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;font-size:12px;color:#3a4a5a}
+.tier-row.active{background:var(--navy);color:#fff;font-weight:700}
+.pbg{background:#dde6f0;border-radius:4px;height:6px;margin-top:8px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;background:var(--navy);transition:width .5s}
+
+/* Quick add bar */
+.quick-bar{background:linear-gradient(135deg,var(--navy) 0%,#0055aa 100%);border-radius:12px;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,48,135,0.2)}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,20,60,0.55);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:700px;padding:24px;box-shadow:0 20px 60px rgba(0,48,135,0.25);margin:auto}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--light)}
+.modal-title{font-size:17px;font-weight:700;color:var(--navy)}
+.sec-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 8px}
+.sep{border:none;border-top:1px solid var(--border);margin:16px 0}
+
+/* Notices */
+.ni-notice{font-size:12px;color:#3a4a5a;background:#e8edf2;border-left:3px solid #5a7090;padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:8px}
+.br-notice{font-size:12px;color:#7a4500;background:#fff3e0;border-left:3px solid #e8a000;padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:8px}
+.dup-notice{font-size:13px;color:#003d8a;background:#dceeff;border:1.5px solid #0077C0;padding:10px 14px;border-radius:8px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+/* Todo */
+.todo-item{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:8px;margin-bottom:6px;font-size:13px}
+.todo-renewal{background:#fff3e0;border:1px solid #f5c842}
+.todo-birthday{background:#fde8eb;border:1px solid #f5a0aa}
+
+/* Search dropdown */
+.search-wrap{position:relative}
+.search-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-top:none;border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 8px 20px rgba(0,48,135,0.15)}
+.search-opt{padding:9px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border)}
+.search-opt:hover{background:var(--light)}
+.search-opt:last-child{border:none}
+
+/* Charts */
+.chart-wrap{position:relative;height:240px}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+
+/* Renewal rows */
+.ren-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+
+/* Views */
+.view{display:none}
+.view.active{display:block}
+
+/* Allstate stripe accent */
+.stripe{height:4px;background:linear-gradient(90deg,var(--navy) 0%,var(--blue) 50%,var(--red) 100%);border-radius:2px;margin-bottom:20px}
+
+/* Responsive */
+@media(max-width:600px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}.chart-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-brand">
+      <svg class="good-hands" viewBox="0 0 42 42" fill="none">
+        <circle cx="21" cy="21" r="20" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <path d="M13 26c0-2 1-4 3-5l3-1.5V16a1.5 1.5 0 013 0v4l2-1a2 2 0 012 2v5c0 2-1.5 3.5-4 4h-5c-2.5 0-4-2-4-4z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M19 19.5l4-1.5" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+        <text x="21" y="13" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="7" font-weight="700" font-family="sans-serif">MT</text>
+      </svg>
+      <div class="brand-text">
+        <div class="agency">Donovan Gomez Agency</div>
+        <div class="allstate">Allstate Insurance · Sales Tracker</div>
+      </div>
+    </div>
+    <div class="hdr-tabs">
+      <button class="tab on" onclick="showView('dash')" id="tab-dash">Dashboard</button>
+      <button class="tab" onclick="showView('clients')" id="tab-clients">Clients</button>
+      <button class="tab" onclick="showView('analytics')" id="tab-analytics">Analytics</button>
+    </div>
+  </div>
+
+  <div class="stripe"></div>
+
+  <!-- DASHBOARD -->
+  <div class="view active" id="view-dash">
+    <div class="quick-bar">
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:15px">Log a Sale</div>
+        <div style="color:rgba(255,255,255,0.65);font-size:12px;margin-top:3px">Add to existing client or create new</div>
+      </div>
+      <button class="btn btn-outline" onclick="openQuickSale()" style="background:#fff;border-color:#fff">+ Add Sale</button>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center">
+      <select id="sel-month" onchange="renderDash()" style="width:auto"></select>
+      <select id="sel-year" onchange="renderDash()" style="width:auto"></select>
+    </div>
+
+    <div class="g4" id="metrics"></div>
+
+    <div class="g2">
+      <div class="card"><div class="card-title">Commission tiers</div><div id="tier-list"></div><div id="tier-prog"></div></div>
+      <div class="card"><div class="card-title">Policies this month</div><div id="month-pols" style="max-height:220px;overflow-y:auto"></div></div>
+    </div>
+
+    <!-- To-Do / Need to Contact -->
+    <div class="card" id="todo-card">
+      <div class="card-title">Need to contact</div>
+      <div id="todo-list"></div>
+    </div>
+
+    <div class="card" id="renewals-card" style="display:none">
+      <div class="card-title">Upcoming renewals — next 45 days</div>
+      <div id="renewals-list"></div>
+    </div>
+  </div>
+
+  <!-- CLIENTS -->
+  <div class="view" id="view-clients">
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <input id="client-search" placeholder="Search by name, phone, or email..." oninput="renderClients()" style="flex:1"/>
+      <button class="btn btn-navy" onclick="openNewClient()">+ New Client</button>
+    </div>
+    <div id="client-list"></div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="view" id="view-analytics">
+    <div class="chart-grid">
+      <div class="card"><div class="card-title">Sales by lead source</div><div class="chart-wrap"><canvas id="ch-lead"></canvas></div></div>
+      <div class="card"><div class="card-title">Policy types sold</div><div class="chart-wrap"><canvas id="ch-type"></canvas></div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-title">Monthly premium ($)</div><div class="chart-wrap"><canvas id="ch-prem"></canvas></div></div>
+      <div class="card"><div class="card-title">Items sold by month</div><div class="chart-wrap"><canvas id="ch-items"></canvas></div></div>
+    </div>
+    <div class="card" style="margin-top:4px">
+      <div class="card-title">Commission by carrier — all time</div>
+      <div class="chart-wrap"><canvas id="ch-carrier"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" style="display:none" onclick="modalBgClick(event)">
+  <div class="modal" id="modal-box"></div>
+</div>
+
+<script>
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTHS_SHORT=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const TIERS=[
+  {min:60000,rate:.09,label:"$60,000+"},
+  {min:50000,rate:.09,label:"$50K–$59,999"},
+  {min:40000,rate:.085,label:"$40K–$49,999"},
+  {min:30000,rate:.08,label:"$30K–$39,999"},
+  {min:25000,rate:.07,label:"$25K–$29,999"},
+  {min:20000,rate:.06,label:"$20K–$24,999"},
+  {min:15000,rate:.045,label:"$15K–$19,999"},
+  {min:10000,rate:.035,label:"$10K–$14,999"},
+  {min:0,rate:0,label:"Under $10K"},
+];
+const NON_ITEM=["VIP","Roadside"];
+const SIX_MO=["Auto"];
+const LEAD_SOURCES=["Cold Call","Web Lead","Inbound Call","Referral","Other"];
+const POL_GROUPS=[
+  {label:"Vehicle",types:["Auto","Commercial Auto","Motorcycle","ATV","RV/Motorhome","Boat","Snowmobile","Vehicle Protection"]},
+  {label:"Property",types:["Home","Condo","Mobile Home","Landlords","Renters","Commercial Property"]},
+  {label:"Personal",types:["Life","Umbrella","Roadside","VIP","Event","Travel","Pet"]},
+  {label:"Other",types:["Other"]},
+];
+const CHART_COLORS=["#003087","#0077C0","#E31837","#00a651","#f5a623","#9b59b6","#1abc9c","#e67e22","#e74c3c","#3498db","#2ecc71","#95a5a6"];
+
+let clients=[],modalData=null,activeCharts={};
+
+const now=new Date();
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function fmt$(n){return"$"+Number(n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtPct(r){return(r*100).toFixed(1)+"%";}
+function fmtDate(d){if(!d)return"—";return new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});}
+function getRate(p){return(TIERS.find(t=>p>=t.min)||TIERS[TIERS.length-1]).rate;}
+function getTier(p){return TIERS.find(t=>p>=t.min)||TIERS[TIERS.length-1];}
+function initials(n){return(n||"?").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();}
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
+function val(id){const el=document.getElementById(id);return el?el.value:"";}
+function displayType(p){return p.type==="Other"&&p.customType?p.customType:p.type;}
+function addMonths(d,n){if(!d)return"";const dt=new Date(d+"T12:00:00");dt.setMonth(dt.getMonth()+n);return dt.toISOString().slice(0,10);}
+function allPolicies(){return clients.flatMap(c=>(c.policies||[]).map(p=>({...p,clientName:c.name,clientId:c.id})));}
+
+// Birthday helpers
+function bdayDays(bday){
+  if(!bday)return null;
+  const b=new Date(bday+"T12:00:00");
+  const today=new Date();today.setHours(0,0,0,0);
+  const thisYr=new Date(today.getFullYear(),b.getMonth(),b.getDate());
+  let diff=Math.ceil((thisYr-today)/86400000);
+  if(diff<0){const nxt=new Date(today.getFullYear()+1,b.getMonth(),b.getDate());diff=Math.ceil((nxt-today)/86400000);}
+  return diff;
+}
+function fmtBday(bday){if(!bday)return"—";const b=new Date(bday+"T12:00:00");return b.toLocaleDateString("en-US",{month:"long",day:"numeric"});}
+
+// Storage
+async function save(){
+  try{
+    const data=JSON.stringify(clients);
+    if(window.storage){await window.storage.set("stracker_v6",data);}
+    else{localStorage.setItem("stracker_v6",data);}
+  }catch(e){}
+}
+async function loadData(){
+  try{
+    let raw=null;
+    if(window.storage){const r=await window.storage.get("stracker_v6");if(r)raw=r.value;}
+    if(!raw)raw=localStorage.getItem("stracker_v6");
+    if(raw)clients=JSON.parse(raw);
+  }catch(e){}
+}
+
+// Commission calc
+function calcComm(pols){
+  const al=pols.filter(p=>p.carrier==="Allstate");
+  const br=pols.filter(p=>p.carrier==="Brokered");
+  const alP=al.reduce((s,p)=>s+Number(p.premium||0),0);
+  const brP=br.reduce((s,p)=>s+Number(p.premium||0),0);
+  const total=alP+brP;
+  const rate=getRate(total);
+  return{alP,brP,total,rate,alComm:alP*rate,brComm:brP*0.04,comm:alP*rate+brP*0.04};
+}
+
+function initSelectors(){
+  const ms=document.getElementById("sel-month");
+  MONTHS.forEach((m,i)=>{const o=new Option(m,i);if(i===now.getMonth())o.selected=true;ms.add(o);});
+  const ys=document.getElementById("sel-year");
+  [now.getFullYear()-1,now.getFullYear(),now.getFullYear()+1].forEach(y=>{const o=new Option(y,y);if(y===now.getFullYear())o.selected=true;ys.add(o);});
+}
+
+// ===== VIEWS =====
+function showView(v){
+  document.querySelectorAll(".view").forEach(el=>el.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(el=>el.classList.remove("on"));
+  document.getElementById("view-"+v).classList.add("active");
+  document.getElementById("tab-"+v).classList.add("on");
+  if(v==="dash")renderDash();
+  else if(v==="clients")renderClients();
+  else if(v==="analytics")renderAnalytics();
+}
+
+// ===== DASHBOARD =====
+function renderDash(){
+  const month=parseInt(val("sel-month")||now.getMonth());
+  const year=parseInt(val("sel-year")||now.getFullYear());
+  const monthPols=clients.flatMap(c=>(c.policies||[]).filter(p=>{
+    if(!p.soldDate)return false;
+    const d=new Date(p.soldDate+"T12:00:00");
+    return d.getMonth()===month&&d.getFullYear()===year;
+  }).map(p=>({...p,clientName:c.name})));
+
+  const {alP,brP,total,rate,alComm,brComm,comm}=calcComm(monthPols);
+  const items=monthPols.filter(p=>!NON_ITEM.includes(p.type)).reduce((s,p)=>s+Number(p.items||1),0);
+  const tier=getTier(total);
+  const tierIdx=TIERS.findIndex(t=>t===tier);
+  const nextTier=tierIdx>0?TIERS[tierIdx-1]:null;
+
+  document.getElementById("metrics").innerHTML=`
+    <div class="metric"><div class="ml">Total Premium</div><div class="mv">${fmt$(total)}</div><div class="msub">AL ${fmt$(alP)} · BR ${fmt$(brP)}</div></div>
+    <div class="metric alt"><div class="ml">Commission Rate</div><div class="mv">${fmtPct(rate)}</div><div class="msub">Brokered flat 4%</div></div>
+    <div class="metric green"><div class="ml">Est. Commission</div><div class="mv">${fmt$(comm)}</div><div class="msub">AL ${fmt$(alComm)} · BR ${fmt$(brComm)}</div></div>
+    <div class="metric" style="background:#5a3087"><div class="ml">Items Sold</div><div class="mv">${items}</div><div class="msub">${monthPols.length-items} non-item</div></div>`;
+
+  document.getElementById("tier-list").innerHTML=TIERS.slice().reverse().map(t=>`
+    <div class="tier-row${t===tier?" active":""}">${t.label}<span>${fmtPct(t.rate)}</span></div>`).join("");
+
+  if(nextTier&&total<nextTier.min){
+    const pct=Math.max(0,Math.min(100,((total-tier.min)/(nextTier.min-tier.min))*100));
+    document.getElementById("tier-prog").innerHTML=`
+      <div style="font-size:12px;color:var(--muted);margin-top:10px">${fmt$(nextTier.min-total)} away from ${fmtPct(nextTier.rate)}</div>
+      <div class="pbg"><div class="pfill" style="width:${pct}%"></div></div>`;
+  } else document.getElementById("tier-prog").innerHTML="";
+
+  document.getElementById("month-pols").innerHTML=monthPols.length===0
+    ?'<p style="font-size:13px;color:var(--muted);padding:8px 0">No policies sold this month.</p>'
+    :monthPols.map(p=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span class="pill p-teal">${displayType(p)}</span>
+          ${p.carrier==="Brokered"?'<span class="pill p-brok">Brok</span>':""}
+          ${p.leadSource?`<span class="pill p-gray" style="font-size:10px">${p.leadSource}</span>`:""}
+          <span style="color:var(--muted)">${esc(p.clientName)}</span>
+        </div>
+        <div style="font-weight:700;color:var(--navy)">${fmt$(p.premium)}</div>
+      </div>`).join("");
+
+  // To-Do section
+  const todos=[];
+  clients.forEach(c=>{
+    // Renewals in next 30 days
+    (c.policies||[]).forEach(p=>{
+      if(!p.renewalDate)return;
+      const days=Math.ceil((new Date(p.renewalDate+"T12:00:00")-new Date())/86400000);
+      if(days>=0&&days<=30)todos.push({type:"renewal",clientName:c.name,policyType:displayType(p),days,date:p.renewalDate,phone:c.phone});
+    });
+    // Birthdays in next 14 days
+    if(c.birthday){
+      const days=bdayDays(c.birthday);
+      if(days!==null&&days<=14)todos.push({type:"birthday",clientName:c.name,days,bday:c.birthday,phone:c.phone});
+    }
+  });
+  todos.sort((a,b)=>a.days-b.days);
+
+  document.getElementById("todo-list").innerHTML=todos.length===0
+    ?'<p style="font-size:13px;color:var(--muted)">All clear — no urgent contacts needed.</p>'
+    :todos.map(t=>{
+      if(t.type==="renewal")return`
+        <div class="todo-item todo-renewal">
+          <div><span style="font-weight:600">${esc(t.clientName)}</span> — <span class="pill p-blue">${t.policyType}</span> renews in <strong>${t.days}d</strong> (${fmtDate(t.date)})</div>
+          ${t.phone?`<a href="tel:${t.phone}" style="font-size:12px;color:var(--blue);font-weight:600;text-decoration:none">📞 Call</a>`:""}
+        </div>`;
+      return`
+        <div class="todo-item todo-birthday">
+          <div>🎂 <span style="font-weight:600">${esc(t.clientName)}</span>'s birthday is in <strong>${t.days===0?"today!":t.days+"d"}</strong> (${fmtBday(t.bday)})</div>
+          ${t.phone?`<a href="sms:${t.phone}" style="font-size:12px;color:var(--red);font-weight:600;text-decoration:none">💬 Text</a>`:""}
+        </div>`;
+    }).join("");
+
+  // Upcoming 45-day renewals card
+  const upcoming=clients.flatMap(c=>(c.policies||[]).map(p=>({...p,clientName:c.name}))).filter(p=>{
+    if(!p.renewalDate)return false;
+    const diff=(new Date(p.renewalDate+"T12:00:00")-new Date())/86400000;
+    return diff>=0&&diff<=45;
+  }).sort((a,b)=>new Date(a.renewalDate)-new Date(b.renewalDate));
+  const rCard=document.getElementById("renewals-card");
+  rCard.style.display=upcoming.length?"":"none";
+  document.getElementById("renewals-list").innerHTML=upcoming.map(p=>{
+    const days=Math.ceil((new Date(p.renewalDate+"T12:00:00")-new Date())/86400000);
+    const col=days<=14?"var(--red)":days<=30?"#c87000":"var(--muted)";
+    return`<div class="ren-row"><div><strong>${esc(p.clientName)}</strong> &nbsp;<span class="pill p-blue">${displayType(p)}</span></div>
+    <div style="color:${col};font-weight:${days<=14?700:400}">${days}d · ${fmtDate(p.renewalDate)}</div></div>`;
+  }).join("");
+}
+
+// ===== CLIENTS =====
+function renderClients(){
+  const q=(val("client-search")||"").toLowerCase();
+  const filtered=q?clients.filter(c=>(c.name||"").toLowerCase().includes(q)||(c.phone||"").includes(q)||(c.email||"").toLowerCase().includes(q)):clients;
+  const el=document.getElementById("client-list");
+  if(!filtered.length){el.innerHTML=`<div class="card" style="text-align:center;padding:2rem"><p style="color:var(--muted);font-size:14px">${clients.length?"No matching clients.":"No clients yet — add your first one!"}</p></div>`;return;}
+  el.innerHTML=filtered.map(c=>{
+    const totalPrem=(c.policies||[]).reduce((s,p)=>s+Number(p.premium||0),0);
+    const {comm}=calcComm(c.policies||[]);
+    const pills=(c.policies||[]).map(p=>`<span class="pill p-teal">${displayType(p)}</span>`).join(" ");
+    const polsHTML=(c.policies||[]).map(p=>`
+      <div class="pol-item">
+        <div class="pol-top">
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+            <span class="pill ${NON_ITEM.includes(p.type)?"p-gray":"p-teal"}">${displayType(p)}</span>
+            <span style="font-weight:700;color:var(--navy)">${esc(p.carrier)}</span>
+            ${p.carrier==="Brokered"?'<span class="pill p-brok">4% flat</span>':""}
+            ${p.leadSource?`<span class="pill p-blue" style="font-size:10px">${p.leadSource}</span>`:""}
+            ${p.items>1?`<span class="pill p-blue">${p.items} items</span>`:""}
+            ${NON_ITEM.includes(p.type)?'<span style="font-size:11px;color:var(--muted)">(non-item)</span>':""}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <span style="font-size:15px;font-weight:700;color:var(--navy)">${fmt$(p.premium)}</span>
+            <button class="btn btn-blue btn-sm" onclick="openEditPolicy('${c.id}','${p.id}')">Edit</button>
+            <button class="btn btn-red btn-sm" onclick="deletePol('${c.id}','${p.id}')">Delete</button>
+          </div>
+        </div>
+        <div class="pol-dates">
+          <span>Sold: ${fmtDate(p.soldDate)}</span>
+          <span>Start: ${fmtDate(p.startDate)}</span>
+          ${p.renewalDate?`<span>Renewal: ${fmtDate(p.renewalDate)}</span>`:""}
+        </div>
+        ${p.notes?`<div style="font-size:12px;color:var(--muted);margin-top:7px;font-style:italic">"${esc(p.notes)}"</div>`:""}
+      </div>`).join("");
+    return`
+    <div class="client-card">
+      <div class="client-hdr" onclick="toggleC('${c.id}')">
+        <div class="c-av">${initials(c.name)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:14px;color:var(--navy)">${esc(c.name)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:1px">${[c.phone,c.email].filter(Boolean).join(" · ")}${c.birthday?` · 🎂 ${fmtBday(c.birthday)}`:""}</div>
+          <div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">${pills}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;margin-right:12px">
+          <div style="font-weight:700;color:var(--navy);font-size:15px">${fmt$(totalPrem)}</div>
+          <div style="font-size:11px;color:var(--muted)">${(c.policies||[]).length} ${(c.policies||[]).length===1?"policy":"policies"}</div>
+        </div>
+        <span class="chev" id="chev-${c.id}">▶</span>
+      </div>
+      <div id="body-${c.id}" style="display:none">
+        <div class="client-body">
+          ${c.address||c.notes?`<div style="margin-bottom:12px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:3px">${c.address?`<span>📍 ${esc(c.address)}</span>`:""}${c.notes?`<span>📝 ${esc(c.notes)}</span>`:""}</div>`:""}
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Policies</div>
+          ${polsHTML||'<p style="font-size:13px;color:var(--muted);margin-bottom:12px">No policies yet.</p>'}
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+            <button class="btn btn-navy btn-sm" onclick="openAddPolicy('${c.id}')">+ Add Policy</button>
+            <button class="btn btn-outline btn-sm" onclick="openEditClient('${c.id}')">Edit Info</button>
+            <button class="btn btn-red btn-sm" onclick="deleteClient('${c.id}')">Delete Client</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function toggleC(id){
+  const b=document.getElementById("body-"+id),ch=document.getElementById("chev-"+id);
+  const open=b.style.display==="none";b.style.display=open?"block":"none";
+  if(ch)ch.classList.toggle("open",open);
+}
+function deletePol(cid,pid){
+  if(!confirm("Remove this policy?"))return;
+  const c=clients.find(x=>x.id===cid);if(c)c.policies=c.policies.filter(p=>p.id!==pid);
+  save();renderClients();
+}
+function deleteClient(id){
+  if(!confirm("Delete this client and all their policies?"))return;
+  clients=clients.filter(c=>c.id!==id);save();renderClients();
+}
+
+// ===== ANALYTICS =====
+function destroyChart(id){if(activeCharts[id]){activeCharts[id].destroy();delete activeCharts[id];}}
+
+function renderAnalytics(){
+  const pols=allPolicies();
+  const totalPrem=pols.reduce((s,p)=>s+Number(p.premium||0),0);
+
+  // Lead source pie
+  const leadData={};
+  LEAD_SOURCES.forEach(l=>leadData[l]=0);
+  pols.forEach(p=>{const k=p.leadSource||"Other";leadData[k]=(leadData[k]||0)+1;});
+  const leadLabels=Object.keys(leadData).filter(k=>leadData[k]>0);
+  const leadVals=leadLabels.map(k=>leadData[k]);
+  destroyChart("lead");
+  if(leadLabels.length){
+    activeCharts["lead"]=new Chart(document.getElementById("ch-lead"),{type:"doughnut",data:{labels:leadLabels,datasets:[{data:leadVals,backgroundColor:CHART_COLORS,borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{boxWidth:12,padding:10,font:{size:11}}}}}});
+  }
+
+  // Policy type doughnut
+  const typeData={};
+  pols.forEach(p=>{const k=displayType(p);typeData[k]=(typeData[k]||0)+1;});
+  const typeLabels=Object.entries(typeData).sort((a,b)=>b[1]-a[1]).slice(0,10).map(x=>x[0]);
+  const typeVals=typeLabels.map(k=>typeData[k]);
+  destroyChart("type");
+  if(typeLabels.length){
+    activeCharts["type"]=new Chart(document.getElementById("ch-type"),{type:"doughnut",data:{labels:typeLabels,datasets:[{data:typeVals,backgroundColor:CHART_COLORS,borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{boxWidth:12,padding:8,font:{size:11}}}}}});
+  }
+
+  // Monthly premium bar (last 12 months)
+  const months=[];const now2=new Date();
+  for(let i=11;i>=0;i--){const d=new Date(now2.getFullYear(),now2.getMonth()-i,1);months.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,label:`${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear().toString().slice(2)}`,al:0,br:0,items:0});}
+  pols.forEach(p=>{
+    if(!p.soldDate)return;
+    const key=p.soldDate.slice(0,7);
+    const m=months.find(x=>x.key===key);
+    if(!m)return;
+    if(p.carrier==="Brokered")m.br+=Number(p.premium||0);else m.al+=Number(p.premium||0);
+    if(!NON_ITEM.includes(p.type))m.items+=Number(p.items||1);
+  });
+
+  destroyChart("prem");
+  activeCharts["prem"]=new Chart(document.getElementById("ch-prem"),{type:"bar",data:{labels:months.map(m=>m.label),datasets:[
+    {label:"Allstate",data:months.map(m=>Math.round(m.al)),backgroundColor:"#003087",borderRadius:4},
+    {label:"Brokered",data:months.map(m=>Math.round(m.br)),backgroundColor:"#E31837",borderRadius:4},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{boxWidth:12,font:{size:11}}}},scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,ticks:{callback:v=>"$"+v.toLocaleString(),font:{size:10}}}}}});
+
+  destroyChart("items");
+  activeCharts["items"]=new Chart(document.getElementById("ch-items"),{type:"bar",data:{labels:months.map(m=>m.label),datasets:[{label:"Items",data:months.map(m=>m.items),backgroundColor:"#0077C0",borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{stepSize:1,font:{size:10}}}}}});
+
+  // Carrier commission pie
+  const alTot=pols.filter(p=>p.carrier==="Allstate").reduce((s,p)=>s+Number(p.premium||0),0);
+  const brTot=pols.filter(p=>p.carrier==="Brokered").reduce((s,p)=>s+Number(p.premium||0),0);
+  const alComm=alTot*getRate(alTot+brTot);const brComm=brTot*0.04;
+  destroyChart("carrier");
+  activeCharts["carrier"]=new Chart(document.getElementById("ch-carrier"),{type:"bar",data:{labels:["Allstate","Brokered"],datasets:[
+    {label:"Premium",data:[Math.round(alTot),Math.round(brTot)],backgroundColor:["#003087","#E31837"],borderRadius:6},
+    {label:"Commission",data:[Math.round(alComm),Math.round(brComm)],backgroundColor:["#0077C0","#f5a623"],borderRadius:6},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{boxWidth:12,font:{size:11}}}},scales:{x:{ticks:{font:{size:12}}},y:{ticks:{callback:v=>"$"+v.toLocaleString(),font:{size:10}}}}}});
+}
+
+// ===== MODAL HELPERS =====
+function polTypeSelect(prefix,selType){
+  return`<select id="${prefix}-type" onchange="handlePolChange('${prefix}')">`+POL_GROUPS.map(g=>`<optgroup label="${g.label}">`+g.types.map(t=>`<option${t===selType?" selected":""}>${t}</option>`).join("")+"</optgroup>").join("")+"</select>";
+}
+function polFields(p,prefix){
+  const isBrok=p.carrier==="Brokered",isNI=NON_ITEM.includes(p.type),isOth=p.type==="Other";
+  return`<div style="background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">
+    <div class="g3" style="margin-bottom:10px">
+      <div><label>Type</label>${polTypeSelect(prefix,p.type)}</div>
+      <div><label>Carrier</label><select id="${prefix}-carrier" onchange="handlePolChange('${prefix}')"><option${p.carrier==="Allstate"?" selected":""}>Allstate</option><option${p.carrier==="Brokered"?" selected":""}>Brokered</option></select></div>
+      <div><label>Lead Source</label><select id="${prefix}-lead">${LEAD_SOURCES.map(l=>`<option${l===p.leadSource?" selected":""}>${l}</option>`).join("")}</select></div>
+    </div>
+    <div id="${prefix}-other" style="margin-bottom:10px;${isOth?"":"display:none"}"><label>Specify type</label><input id="${prefix}-customtype" value="${esc(p.customType)}" placeholder="Describe policy type..."/></div>
+    <div id="${prefix}-ni" class="ni-notice" style="${isNI?"":"display:none"}">This type counts toward premium but not item count.</div>
+    <div id="${prefix}-br" class="br-notice" style="${isBrok?"":"display:none"}">Brokered policy — paid at flat 4% regardless of tier.</div>
+    <div class="g3" style="margin-bottom:10px">
+      <div><label>Premium ($)</label><input id="${prefix}-premium" type="number" value="${p.premium||""}" placeholder="0.00"/></div>
+      <div><label>Date Sold</label><input id="${prefix}-sold" type="date" value="${p.soldDate||""}"/></div>
+      <div><label>Items (vehicles, etc.)</label><input id="${prefix}-items" type="number" min="1" value="${p.items||1}" placeholder="1" style="width:100%"/><div style="font-size:11px;color:var(--muted);margin-top:3px">e.g. 3 vehicles on one auto = 3 items</div></div>
+    </div>
+    <div class="g3" style="margin-bottom:10px">
+      <div><label>Policy Start</label><input id="${prefix}-start" type="date" value="${p.startDate||""}" onchange="autoRenewal('${prefix}')"/></div>
+      <div><label>Renewal Date</label><input id="${prefix}-renewal" type="date" value="${p.renewalDate||""}"/></div>
+      <div><label>Notes</label><input id="${prefix}-notes" value="${esc(p.notes)}" placeholder="Policy notes..."/></div>
+    </div>
+  </div>`;
+}
+function handlePolChange(prefix){
+  const type=val(prefix+"-type"),carrier=val(prefix+"-carrier");
+  const el=id=>document.getElementById(prefix+"-"+id);
+  if(el("ni"))el("ni").style.display=NON_ITEM.includes(type)?"":"none";
+  if(el("br"))el("br").style.display=carrier==="Brokered"?"":"none";
+  if(el("other"))el("other").style.display=type==="Other"?"":"none";
+  autoRenewal(prefix);
+}
+function autoRenewal(prefix){
+  const start=val(prefix+"-start"),type=val(prefix+"-type");
+  if(!start)return;
+  const renEl=document.getElementById(prefix+"-renewal");
+  if(renEl&&!renEl.value)renEl.value=addMonths(start,SIX_MO.includes(type)?6:12);
+}
+function collectPol(prefix,existingId){
+  return{id:existingId||uid(),type:val(prefix+"-type"),customType:val(prefix+"-customtype"),carrier:val(prefix+"-carrier"),leadSource:val(prefix+"-lead"),premium:val(prefix+"-premium"),items:Math.max(1,parseInt(val(prefix+"-items")||1)),soldDate:val(prefix+"-sold"),startDate:val(prefix+"-start"),renewalDate:val(prefix+"-renewal"),notes:val(prefix+"-notes")};
+}
+function newPol(){return{id:uid(),type:"Auto",customType:"",carrier:"Allstate",leadSource:"",premium:"",items:1,soldDate:new Date().toISOString().slice(0,10),startDate:"",renewalDate:"",notes:""};}
+
+// ===== SEARCHABLE CLIENT PICKER (Quick Sale) =====
+let qsSelectedClient=null;
+function buildClientPicker(){
+  return`<div class="search-wrap">
+    <input id="qs-picker" placeholder="Search or type client name..." autocomplete="off" oninput="filterClientPicker()" onfocus="showPickerDrop()" style="width:100%"/>
+    <div class="search-dropdown" id="qs-drop" style="display:none"></div>
+  </div>
+  <div id="qs-selected" style="display:none;margin-top:6px;font-size:13px;background:#dcf5ec;border:1.5px solid #0a6040;border-radius:8px;padding:8px 12px;color:#0a6040;font-weight:600;display:flex;align-items:center;justify-content:space-between">
+    <span id="qs-sel-name"></span>
+    <button class="btn btn-xs" style="background:#fff;color:var(--red);border:1px solid var(--red)" onclick="clearClientPick()">✕ Clear</button>
+  </div>`;
+}
+function filterClientPicker(){
+  qsSelectedClient=null;
+  const q=(val("qs-picker")||"").toLowerCase();
+  const drop=document.getElementById("qs-drop");
+  if(!q){drop.style.display="none";return;}
+  const matches=clients.filter(c=>(c.name||"").toLowerCase().includes(q)||(c.phone||"").includes(q)||(c.email||"").toLowerCase().includes(q));
+  drop.innerHTML=matches.length
+    ?matches.slice(0,8).map(c=>`<div class="search-opt" onclick="selectClient('${c.id}')"><strong>${esc(c.name)}</strong><span style="color:var(--muted);font-size:12px;margin-left:8px">${c.phone||c.email||""}</span></div>`).join("")
+    :`<div class="search-opt" style="color:var(--muted)">No match — will create new client</div>`;
+  drop.style.display="block";
+}
+function showPickerDrop(){if((val("qs-picker")||"").length)filterClientPicker();}
+function selectClient(id){
+  const c=clients.find(x=>x.id===id);if(!c)return;
+  qsSelectedClient=c;
+  const inp=document.getElementById("qs-picker");if(inp)inp.value=c.name;
+  const drop=document.getElementById("qs-drop");if(drop)drop.style.display="none";
+  const selDiv=document.getElementById("qs-selected");
+  const selName=document.getElementById("qs-sel-name");
+  if(selDiv){selDiv.style.display="flex";}
+  if(selName)selName.textContent="Adding to: "+c.name;
+  // Hide new client fields
+  const nf=document.getElementById("qs-newfields");if(nf)nf.style.display="none";
+}
+function clearClientPick(){
+  qsSelectedClient=null;
+  const inp=document.getElementById("qs-picker");if(inp)inp.value="";
+  const selDiv=document.getElementById("qs-selected");if(selDiv)selDiv.style.display="none";
+}
+
+// Duplicate detection
+function checkDuplicate(prefix){
+  const phone=val(prefix+"-phone"),email=val(prefix+"-email");
+  const dupEl=document.getElementById(prefix+"-dup");if(!dupEl)return;
+  const match=clients.find(c=>(phone&&c.phone===phone)||(email&&c.email===email));
+  if(match){
+    dupEl.innerHTML=`<div class="dup-notice">Looks like this might be <strong>${esc(match.name)}</strong> — already in your clients. <button class="btn btn-blue btn-xs" onclick="selectClient('${match.id}');closeModal()">Add to their profile</button></div>`;
+    dupEl.style.display="block";
+  } else {dupEl.style.display="none";}
+}
+
+// ===== MODAL LAUNCHERS =====
+function openModal(){document.getElementById("modal-bg").style.display="flex";}
+function closeModal(){document.getElementById("modal-bg").style.display="none";document.getElementById("modal-box").innerHTML="";}
+function modalBgClick(e){if(e.target===document.getElementById("modal-bg"))closeModal();}
+
+let extraPols=[];
+function openQuickSale(){
+  extraPols=[];qsSelectedClient=null;
+  document.getElementById("modal-box").innerHTML=`
+    <div class="modal-hdr">
+      <div class="modal-title">Log a Sale</div>
+      <button class="btn btn-red btn-sm" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div class="sec-lbl">Client</div>
+    ${buildClientPicker()}
+    <div id="qs-newfields" style="margin-top:10px">
+      <div id="nc-dup"></div>
+      <div class="g2" style="margin-bottom:10px">
+        <div><label>Phone</label><input id="nc-phone" placeholder="(281) 555-0000" onblur="checkDuplicate('nc')"/></div>
+        <div><label>Email</label><input id="nc-email" placeholder="email@example.com" onblur="checkDuplicate('nc')"/></div>
+      </div>
+    </div>
+    <div class="sec-lbl" style="margin-top:4px">Policy</div>
+    ${polFields(newPol(),"qs")}
+    <div class="sep"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-navy" onclick="submitQuickSale()">Save Sale</button>
+    </div>`;
+  openModal();
+}
+
+function submitQuickSale(){
+  const pol=collectPol("qs");
+  if(qsSelectedClient){
+    qsSelectedClient.policies=qsSelectedClient.policies||[];
+    qsSelectedClient.policies.push(pol);
+  } else {
+    const name=(val("qs-picker")||"").trim();
+    if(!name){alert("Please enter or select a client name.");return;}
+    clients.push({id:uid(),name,phone:val("nc-phone"),email:val("nc-email"),address:"",birthday:"",notes:"",policies:[pol]});
+  }
+  save();closeModal();renderDash();
+}
+
+function openNewClient(){
+  extraPols=[];
+  document.getElementById("modal-box").innerHTML=`
+    <div class="modal-hdr">
+      <div class="modal-title">New Client</div>
+      <button class="btn btn-red btn-sm" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div class="sec-lbl" style="margin-top:0">Client Info</div>
+    <div class="g2" style="margin-bottom:10px">
+      <div><label>Full name *</label><input id="f-name" placeholder="Jane Smith"/></div>
+      <div><label>Phone</label><input id="f-phone" placeholder="(281) 555-0000" onblur="checkDuplicate('f')"/></div>
+    </div>
+    <div id="f-dup"></div>
+    <div class="g3" style="margin-bottom:10px">
+      <div><label>Email</label><input id="f-email" placeholder="jane@email.com" onblur="checkDuplicate('f')"/></div>
+      <div><label>Address</label><input id="f-addr" placeholder="The Woodlands, TX"/></div>
+      <div><label>Birthday</label><input id="f-bday" type="date"/></div>
+    </div>
+    <div style="margin-bottom:4px"><label>Notes</label><textarea id="f-notes" rows="2" placeholder="Notes about this client..."></textarea></div>
+    <div class="sec-lbl">First Policy</div>
+    ${polFields(newPol(),"pol0")}
+    <button class="btn btn-ghost" style="width:100%;margin-bottom:4px;justify-content:center" onclick="addExtraPol()">+ Add Another Policy</button>
+    <div id="extra-pols-wrap"></div>
+    <div class="sep"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-navy" onclick="submitNewClient()">Save Client</button>
+    </div>`;
+  openModal();
+}
+
+function addExtraPol(){
+  const p=newPol();extraPols.push(p);
+  const div=document.createElement("div");div.id="xp-"+p.id;
+  div.innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:12px 0 6px;display:flex;justify-content:space-between">Policy ${extraPols.length+1}<button class="btn btn-red btn-xs" onclick="removeExtraPol('${p.id}')">Remove</button></div>${polFields(p,"xp"+p.id)}`;
+  document.getElementById("extra-pols-wrap").appendChild(div);
+}
+function removeExtraPol(id){extraPols=extraPols.filter(p=>p.id!==id);const el=document.getElementById("xp-"+id);if(el)el.remove();}
+
+function submitNewClient(){
+  const name=val("f-name").trim();if(!name){alert("Client name is required.");return;}
+  const c={id:uid(),name,phone:val("f-phone"),email:val("f-email"),address:val("f-addr"),birthday:val("f-bday"),notes:val("f-notes"),
+    policies:[collectPol("pol0"),...extraPols.map(p=>collectPol("xp"+p.id))]};
+  extraPols=[];clients.push(c);save();closeModal();renderClients();showView("clients");
+}
+
+function openEditClient(id){
+  const c=clients.find(x=>x.id===id);if(!c)return;
+  document.getElementById("modal-box").innerHTML=`
+    <div class="modal-hdr">
+      <div class="modal-title">Edit Client Info</div>
+      <button class="btn btn-red btn-sm" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div><label>Full name *</label><input id="f-name" value="${esc(c.name)}"/></div>
+      <div><label>Phone</label><input id="f-phone" value="${esc(c.phone)}"/></div>
+    </div>
+    <div class="g3" style="margin-bottom:10px">
+      <div><label>Email</label><input id="f-email" value="${esc(c.email)}"/></div>
+      <div><label>Address</label><input id="f-addr" value="${esc(c.address)}"/></div>
+      <div><label>Birthday</label><input id="f-bday" type="date" value="${c.birthday||""}"/></div>
+    </div>
+    <div><label>Notes</label><textarea id="f-notes" rows="2">${esc(c.notes)}</textarea></div>
+    <div class="sep"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-navy" onclick="submitEditClient('${c.id}')">Save Changes</button>
+    </div>`;
+  openModal();
+}
+function submitEditClient(id){
+  const c=clients.find(x=>x.id===id);if(!c)return;
+  const name=val("f-name").trim();if(!name){alert("Name required.");return;}
+  Object.assign(c,{name,phone:val("f-phone"),email:val("f-email"),address:val("f-addr"),birthday:val("f-bday"),notes:val("f-notes")});
+  save();closeModal();renderClients();
+}
+
+function openAddPolicy(cid){
+  const c=clients.find(x=>x.id===cid);if(!c)return;
+  document.getElementById("modal-box").innerHTML=`
+    <div class="modal-hdr">
+      <div class="modal-title">Add Policy</div>
+      <button class="btn btn-red btn-sm" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Adding to: <strong style="color:var(--navy)">${esc(c.name)}</strong></div>
+    ${polFields(newPol(),"ap")}
+    <div class="sep"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-navy" onclick="submitAddPol('${cid}')">Add Policy</button>
+    </div>`;
+  openModal();
+}
+function submitAddPol(cid){
+  const c=clients.find(x=>x.id===cid);if(!c)return;
+  c.policies=c.policies||[];c.policies.push(collectPol("ap"));
+  save();closeModal();renderClients();
+}
+
+function openEditPolicy(cid,pid){
+  const c=clients.find(x=>x.id===cid);if(!c)return;
+  const p=c.policies.find(x=>x.id===pid);if(!p)return;
+  document.getElementById("modal-box").innerHTML=`
+    <div class="modal-hdr">
+      <div class="modal-title">Edit Policy</div>
+      <button class="btn btn-red btn-sm" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Editing policy for: <strong style="color:var(--navy)">${esc(c.name)}</strong></div>
+    ${polFields(p,"ep")}
+    <div class="sep"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-navy" onclick="submitEditPol('${cid}','${pid}')">Save Changes</button>
+    </div>`;
+  openModal();
+}
+function submitEditPol(cid,pid){
+  const c=clients.find(x=>x.id===cid);if(!c)return;
+  const updated=collectPol("ep",pid);
+  c.policies=c.policies.map(p=>p.id===pid?updated:p);
+  save();closeModal();renderClients();
+}
+
+// ===== INIT =====
+async function init(){
+  await loadData();
+  initSelectors();
+  showView("dash");
+}
+init();
+</script>
+</body>
+</html>
