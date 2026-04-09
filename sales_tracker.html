@@ -223,6 +223,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);bo
 </div>
 
 <script>
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyPGLzjCo7YrVNsVbcMhrQQ_-6QXTrrzo-KVyssyiPxLULMah_IJ-C_7dFXfiDRjuBTaQ/exec";
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const MONTHS_SHORT=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const TIERS=[
@@ -279,17 +280,19 @@ function fmtBday(bday){if(!bday)return"—";const b=new Date(bday+"T12:00:00");r
 async function save(){
   try{
     const data=JSON.stringify(clients);
-    if(window.storage){await window.storage.set("stracker_v6",data);}
-    else{localStorage.setItem("stracker_v6",data);}
+    localStorage.setItem("stracker_v6",data);
+    fetch(SCRIPT_URL,{method:"POST",body:data,headers:{"Content-Type":"text/plain"}}).catch(()=>{});
   }catch(e){}
 }
 async function loadData(){
   try{
-    let raw=null;
-    if(window.storage){const r=await window.storage.get("stracker_v6");if(r)raw=r.value;}
-    if(!raw)raw=localStorage.getItem("stracker_v6");
-    if(raw)clients=JSON.parse(raw);
-  }catch(e){}
+    const res=await fetch(SCRIPT_URL);
+    const raw=await res.text();
+    if(raw&&raw!=="[]"&&raw.startsWith("["))clients=JSON.parse(raw);
+    else{const local=localStorage.getItem("stracker_v6");if(local)clients=JSON.parse(local);}
+  }catch(e){
+    const local=localStorage.getItem("stracker_v6");if(local)try{clients=JSON.parse(local);}catch(e2){}
+  }
 }
 
 // Commission calc
